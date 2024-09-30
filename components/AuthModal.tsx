@@ -38,6 +38,9 @@ const AuthModal = ({ authType }: AuthModalProps) => {
   const { startOAuthFlow: microsoftAuth } = useOAuth({
     strategy: AuthStrategy.Microsoft,
   })
+  const { startOAuthFlow: slackAuth } = useOAuth({
+    strategy: AuthStrategy.Slack,
+  })
   const { startOAuthFlow: appleAuth } = useOAuth({
     strategy: AuthStrategy.Apple,
   })
@@ -48,6 +51,7 @@ const AuthModal = ({ authType }: AuthModalProps) => {
     const selectedAuth = {
       [AuthStrategy.Google]: googleAuth,
       [AuthStrategy.Microsoft]: microsoftAuth,
+      [AuthStrategy.Slack]: slackAuth,
       [AuthStrategy.Apple]: appleAuth,
     }[strategy]
 
@@ -85,15 +89,17 @@ const AuthModal = ({ authType }: AuthModalProps) => {
       }
     } else {
       try {
+        // console.log('Here')
         const { createdSessionId, setActive } = await selectedAuth!()
 
         if (createdSessionId) {
+          console.log('Here 2')
           setActive!({ session: createdSessionId })
           // setAuthType(null)
           console.log('Session created')
         }
       } catch (error) {
-        console.log(error)
+        console.log('Something went wrong', error)
       }
     }
   }

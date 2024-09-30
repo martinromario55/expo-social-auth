@@ -11,6 +11,7 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import AuthModal from '@/components/AuthModal'
+import { useSupabase } from '@/context/supabaseContext'
 
 export default function Index() {
   const { top } = useSafeAreaInsets()
@@ -18,6 +19,8 @@ export default function Index() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const snapPoints = useMemo(() => ['33%'], [])
   const [authType, setAuthType] = useState<ModalType | null>(null)
+
+  const { getBoards } = useSupabase()
 
   const showModal = async (type: ModalType) => {
     setAuthType(type)
@@ -28,6 +31,7 @@ export default function Index() {
   }
 
   const openActionSheet = async () => {
+    const data = await getBoards!()
     const options = ['View support docs', 'Contact us', 'Cancel']
     const cancelButtonIndex = 2
 
